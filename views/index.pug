@@ -1,0 +1,106 @@
+extends layout
+block content
+    .container
+        h1= title
+
+        
+        table.table.table-striped
+            thead.thead-default
+                tr
+                    th Ref
+                    th Status
+                    th Name
+                    th DXCC
+                    th Region
+                    th Notes
+                tr
+                    th
+                        input(type="search" name="search-ref" id="Ref" class="search")
+                    th
+                        input(type="search" name="search-status" id="Status" class="search")
+                    th
+                        input(type="search" name="search-name" id="Name" class="search")
+                    th
+                        input(type="search" name="search-dxcc" id="DXCC" class="search")
+                    th
+                        input(type="search" name="search-region" id="Region" class="search")
+                    th
+                        input(type="search" name="search-notes" id="Notes" class="search")
+
+            tbody(id="update")
+                - for (i=0; i<docs.length; i++) {
+                    tr
+                        - if (docs[i].Status == 'deleted') {
+                            td.ref.deleted #{docs[i].Ref}
+                            td.deleted #{docs[i].Status}
+                            td.deleted #{docs[i].Name}
+                            td.deleted #{docs[i].DXCC}
+                            td.deleted #{docs[i].Region}
+                            td.deleted #{docs[i].Notes}
+                        - } else {
+                            td.ref #{docs[i].Ref}
+                            td #{docs[i].Status}
+                            td #{docs[i].Name}
+                            td #{docs[i].DXCC}
+                            td #{docs[i].Region}
+                            td #{docs[i].Notes}
+                        - }
+                - }
+                
+    script.
+        $('.search').keyup(function(e){
+            if ( e.keyCode == 9 || e.keyCode == 16 ) {
+                return;    
+            }
+            var searchId = $(this).attr('id');
+            var data = !{JSON.stringify(docs)};
+            var output;
+            var searchString = $(this).val();
+            var myExp = new RegExp(searchString, 'i');
+            var deleted = '';
+            if (searchString == '') {
+                for (i = 0; i < data.length; i++) {
+                    if (data[i].Status == 'deleted') {
+                        deleted = ' class="deleted"';
+                    } else {
+                        deleted = '';    
+                    }
+                    output += '<tr>';
+                    output += '<td' + deleted + ' class="ref">' + data[i].Ref + '</td>';
+                    output += '<td' + deleted + '>' + data[i].Status + '</td>';
+                    output += '<td' + deleted + '>' + data[i].Name + '</td>';
+                    output += '<td' + deleted + '>' + data[i].DXCC + '</td>';
+                    output += '<td' + deleted + '>' + data[i].Region + '</td>';
+                    output += '<td' + deleted + '>' + data[i].Notes + '</td>';
+                    output += '</tr>';
+                    deleted = '';
+                }
+                $('#update').html(output);
+            } else {
+                var count = 0;
+                for (i = 0; i < data.length; i++) {
+                   if (data[i][searchId] && (data[i][searchId].search(myExp) !== -1)) {
+                        if (data[i].Status == 'deleted') {
+                            deleted = ' class="deleted"';
+                        } else {
+                            deleted = '';    
+                        }
+                        output += '<tr>';
+                        output += '<td' + deleted + ' class="ref">' + data[i].Ref + '</td>';
+                        output += '<td' + deleted + '>' + data[i].Status + '</td>';
+                        output += '<td' + deleted + '>' + data[i].Name + '</td>';
+                        output += '<td' + deleted + '>' + data[i].DXCC + '</td>';
+                        output += '<td' + deleted + '>' + data[i].Region + '</td>';
+                        output += '<td' + deleted + '>' + data[i].Notes + '</td>';
+                        output += '</tr>';
+                        deleted = '';
+                    } else {
+                        count++;
+                        if(count === data.length){
+                            output = '<tr><td colspan="6"><center>No results.</center></td></tr>';
+                        }
+                    }
+                }
+                $('#update').html(output);
+            }
+        });

@@ -1,0 +1,7 @@
+.deleted {
+    text-decoration: line-through;
+}
+
+td.ref {
+    width: 8em;
+}
