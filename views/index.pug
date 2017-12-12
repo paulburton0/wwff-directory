@@ -4,7 +4,11 @@ block content
 
         h1= title
 
-        span(id="count") 
+        span(id="count")
+
+        div(style="float: right")
+            span
+                a(id="clearSearch") Clear Search
         
         table.table.table-striped
             thead.thead-default
@@ -51,13 +55,55 @@ block content
                 
     script.
 
-        var searchFields = { Ref: null,
-                             Status: null,
-                             Name: null,
-                             DXCC: null,
-                             Region: null,
-                             Notes: null
+        var searchFields = { Ref: '',
+                             Status: '',
+                             Name: '',
+                             DXCC: '',
+                             Region: '',
+                             Notes: ''
                             };
+
+        $('#clearSearch').click(function() { 
+            $('#Ref').val('');
+            $('#Status').val('');
+            $('#Name').val('');
+            $('#DXCC').val('');
+            $('#Region').val('');
+            $('#Notes').val('');
+
+            var data = !{JSON.stringify(docs)};
+            var output = {};
+            var deleted = '';
+
+            searchFields = { Ref: '',
+                             Status: '',
+                             Name: '',
+                             DXCC: '',
+                             Region: '',
+                             Notes: ''
+                            };
+
+            for (i = 0; i < data.length; i++) {
+
+                // Add the deleted CSS class if the row is marked as deleted
+                if (data[i].Status == 'deleted') {
+                    deleted = ' class="deleted"';
+                } else {
+                    deleted = '';    
+                }
+                output += '<tr>';
+                output += '<td' + deleted + ' class="ref">' + data[i].Ref + '</td>';
+                output += '<td' + deleted + '>' + data[i].Status + '</td>';
+                output += '<td' + deleted + '>' + data[i].Name + '</td>';
+                output += '<td' + deleted + '>' + data[i].DXCC + '</td>';
+                output += '<td' + deleted + '>' + data[i].Region + '</td>';
+                output += '<td' + deleted + '>' + data[i].Notes + '</td>';
+                output += '</tr>';
+                deleted = '';
+            }
+            $('#update').html(output);
+            $('#count').html('');
+        });
 
         $('.search').keyup(function(e){
             // Ignore Tab (9) and Shift (6)
@@ -71,21 +117,18 @@ block content
             // The string that we're searching for
             var searchString = $(this).val();
 
-            searchFields[searchId] = searchString; 
-
-            console.log(searchFields);
+            // Create a case insensitive regex object from the search string
+            searchFields[searchId] = searchString == '' ? '' : new RegExp(searchString, 'i'); 
 
             // Read in the results from the mongodb query and turn them into a JSON string
             var data = !{JSON.stringify(docs)};
-            var output;
 
-            // Create a case insensitive regex object from the search string
-            var myExp = new RegExp(searchString, 'i');
+            var output = {};
 
             var deleted = '';
 
             // If the search string is empty, then update the content element with the full listing
-            if (searchString == '') {
+            if (!searchFields.Ref && !searchFields.Status && !searchFields.Name && !searchFields.DXCC && !searchFields.Region && !searchFields.Notes) {
                 for (i = 0; i < data.length; i++) {
 
                     // Add the deleted CSS class if the row is marked as deleted
@@ -115,7 +158,14 @@ block content
                 for (i = 0; i < data.length; i++) {
 
                    // Loop through the rows of data and search for the search string
-                   if (data[i][searchId] && (data[i][searchId].search(myExp) !== -1)) {
+                   if (
+                       ((data[i].Ref.search(searchFields.Ref) !== -1)) && 
+                       ((data[i].Status.search(searchFields.Status) !== -1)) &&
+                       ((data[i].Name.search(searchFields.Name) !== -1)) && 
+                       ((data[i].DXCC.search(searchFields.DXCC) !== -1)) && 
+                       ((data[i].Region.search(searchFields.Region) !== -1)) && 
+                       ((data[i].Notes.search(searchFields.Notes) !== -1))
+                      ) {
 
                         // Add the deleted CSS class if the row is marked as deleted
                         if (data[i].Status == 'deleted') {
