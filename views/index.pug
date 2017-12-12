@@ -3,6 +3,8 @@ block content
     .container
 
         h1= title
+
+        span(id="count") 
         
         table.table.table-striped
             thead.thead-default
@@ -48,6 +50,15 @@ block content
                 - }
                 
     script.
+
+        var searchFields = { Ref: null,
+                             Status: null,
+                             Name: null,
+                             DXCC: null,
+                             Region: null,
+                             Notes: null
+                            };
+
         $('.search').keyup(function(e){
             // Ignore Tab (9) and Shift (6)
             if ( e.keyCode == 9 || e.keyCode == 16 ) {
@@ -57,12 +68,16 @@ block content
             // Get the id of the search field that's being typed in.
             var searchId = $(this).attr('id');
 
+            // The string that we're searching for
+            var searchString = $(this).val();
+
+            searchFields[searchId] = searchString; 
+
+            console.log(searchFields);
+
             // Read in the results from the mongodb query and turn them into a JSON string
             var data = !{JSON.stringify(docs)};
             var output;
-
-            // The string that we're searching for
-            var searchString = $(this).val();
 
             // Create a case insensitive regex object from the search string
             var myExp = new RegExp(searchString, 'i');
@@ -88,12 +103,15 @@ block content
                     output += '<td' + deleted + '>' + data[i].Notes + '</td>';
                     output += '</tr>';
                     deleted = '';
+                    resultsCount = 0;
                 }
                 $('#update').html(output);
+                $('#count').html('');
 
-            // If the search string is not null, then filter it
+            // If the search string is not null, then filter the results 
             } else {
                 var count = 0;
+                var resultsCount = 0;
                 for (i = 0; i < data.length; i++) {
 
                    // Loop through the rows of data and search for the search string
@@ -114,13 +132,18 @@ block content
                         output += '<td' + deleted + '>' + data[i].Notes + '</td>';
                         output += '</tr>';
                         deleted = '';
+
+                        resultsCount++;
                     } else {
                         count++;
+                        // If we've looped through the entire data set without finding a match, then tell the user.
                         if(count === data.length){
                             output = '<tr><td colspan="6"><center>No results.</center></td></tr>';
+                            resultsCount = 0;
                         }
                     }
                 }
                 $('#update').html(output);
+                $('#count').html(resultsCount + ' Results');
             }
         });
