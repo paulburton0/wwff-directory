@@ -4,7 +4,7 @@ block content
 
         h1= title
 
-        span(id="count")
+        span(id="count") #{docs.length} Results
 
         div(style="float: right")
             span
@@ -74,6 +74,8 @@ block content
             var data = !{JSON.stringify(docs)};
             var output = {};
             var deleted = '';
+            var count = 0;
+            var resultsCount = 0;
 
             searchFields = { Ref: '',
                              Status: '',
@@ -100,9 +102,10 @@ block content
                 output += '<td' + deleted + '>' + data[i].Notes + '</td>';
                 output += '</tr>';
                 deleted = '';
+                resultsCount++;
             }
             $('#update').html(output);
-            $('#count').html('');
+            $('#count').html(resultsCount + ' Results');
         });
 
         $('.search').keyup(function(e){
@@ -129,6 +132,7 @@ block content
 
             // If the search string is empty, then update the content element with the full listing
             if (!searchFields.Ref && !searchFields.Status && !searchFields.Name && !searchFields.DXCC && !searchFields.Region && !searchFields.Notes) {
+                resultsCount = 0;
                 for (i = 0; i < data.length; i++) {
 
                     // Add the deleted CSS class if the row is marked as deleted
@@ -146,10 +150,10 @@ block content
                     output += '<td' + deleted + '>' + data[i].Notes + '</td>';
                     output += '</tr>';
                     deleted = '';
-                    resultsCount = 0;
+                    resultsCount++;
                 }
                 $('#update').html(output);
-                $('#count').html('');
+                $('#count').html(resultsCount + ' Results');
 
             // If the search string is not null, then filter the results 
             } else {
