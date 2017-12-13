@@ -11,17 +11,17 @@ block content
         span(id="count") #{docs.length} Results
 
         div(style="float: right")
-            a(id="clearSearch" role="button").btn.btn-sm Clear Search
+            a(id="clearSearch" role="button").btn.btn-primary.btn-sm Clear Search
         table.table.table-striped
             thead.thead-default
-                tr.row
+                tr
                     th Ref
                     th Status
                     th Name
                     th DXCC
                     th Region
                     th Notes
-                tr.row
+                tr
                     th
                         input(type="search" name="search-ref" id="Ref" class="search")
                     th
@@ -37,7 +37,7 @@ block content
 
             tbody(id="update")
                 - for (i=0; i<docs.length; i++) {
-                    tr.row
+                    tr
                         - if (docs[i].Status == 'deleted') {
                             td.ref.deleted #{docs[i].Ref}
                             td.deleted #{docs[i].Status}
@@ -95,7 +95,7 @@ block content
                 } else {
                     deleted = '';    
                 }
-                output += '<tr class="row">';
+                output += '<tr>';
                 output += '<td' + deleted + ' class="ref">' + data[i].Ref + '</td>';
                 output += '<td' + deleted + '>' + data[i].Status + '</td>';
                 output += '<td' + deleted + '>' + data[i].Name + '</td>';
@@ -179,7 +179,7 @@ block content
                         } else {
                             deleted = '';    
                         }
-                        output += '<tr class="row">';
+                        output += '<tr>';
                         output += '<td' + deleted + ' class="ref">' + data[i].Ref + '</td>';
                         output += '<td' + deleted + '>' + data[i].Status + '</td>';
                         output += '<td' + deleted + '>' + data[i].Name + '</td>';
