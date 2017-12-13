@@ -1,5 +1,9 @@
 extends layout
 block content
+    style.
+        td,th{
+            width: auto;
+        }
     .container
 
         h1= title
@@ -7,19 +11,17 @@ block content
         span(id="count") #{docs.length} Results
 
         div(style="float: right")
-            span
-                a(id="clearSearch") Clear Search
-        
+            a(id="clearSearch" role="button").btn.btn-sm Clear Search
         table.table.table-striped
             thead.thead-default
-                tr
+                tr.row
                     th Ref
                     th Status
                     th Name
                     th DXCC
                     th Region
                     th Notes
-                tr
+                tr.row
                     th
                         input(type="search" name="search-ref" id="Ref" class="search")
                     th
@@ -35,7 +37,7 @@ block content
 
             tbody(id="update")
                 - for (i=0; i<docs.length; i++) {
-                    tr
+                    tr.row
                         - if (docs[i].Status == 'deleted') {
                             td.ref.deleted #{docs[i].Ref}
                             td.deleted #{docs[i].Status}
@@ -93,7 +95,7 @@ block content
                 } else {
                     deleted = '';    
                 }
-                output += '<tr>';
+                output += '<tr class="row">';
                 output += '<td' + deleted + ' class="ref">' + data[i].Ref + '</td>';
                 output += '<td' + deleted + '>' + data[i].Status + '</td>';
                 output += '<td' + deleted + '>' + data[i].Name + '</td>';
@@ -141,7 +143,7 @@ block content
                     } else {
                         deleted = '';    
                     }
-                    output += '<tr>';
+                    output += '<tr clas="row">';
                     output += '<td' + deleted + ' class="ref">' + data[i].Ref + '</td>';
                     output += '<td' + deleted + '>' + data[i].Status + '</td>';
                     output += '<td' + deleted + '>' + data[i].Name + '</td>';
@@ -177,7 +179,7 @@ block content
                         } else {
                             deleted = '';    
                         }
-                        output += '<tr>';
+                        output += '<tr class="row">';
                         output += '<td' + deleted + ' class="ref">' + data[i].Ref + '</td>';
                         output += '<td' + deleted + '>' + data[i].Status + '</td>';
                         output += '<td' + deleted + '>' + data[i].Name + '</td>';
