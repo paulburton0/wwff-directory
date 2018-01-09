@@ -1,0 +1,46 @@
+#!/usr/bin/node
+
+var request = require('request');
+var cheerio = require('cheerio');
+var MongoClient = require('mongodb').MongoClient;
+
+request('https://parksontheair.com/', function(err, response, body){
+    if(err){
+        console.error(err);
+    }
+
+    console.error("Status code: " + response.statusCode);
+
+    var $ = cheerio.load(body);
+
+    var json = [];
+
+    $('table#igsv-16r2mUR-QdFyV9eMJ1H8tvpL_ZDtlpLS7SasirRbx5MU').find('tbody > tr').each(function( index ) {
+        var row = {};
+        $(this).find('td').each(function( index ){
+            switch ( index ) {
+                case 0:
+                    row['Ref'] = $(this).text().trim().substring(0,6);
+                    row['Name'] = $(this).text().trim().substring(7,$(this).text().trim().length);
+                    break;
+                case 1:
+                    row['Location'] = $(this).text().trim();
+                    break;
+                case 2:
+                    row['Type'] = $(this).text().trim();
+                    break;
+            }
+        });
+        json.push(row);
+    });
+    MongoClient.connect('mongodb://localhost:27017/pota1', function(err, db) {
+        db.collection('directory').drop( function(err, reply) {
+            db.collection('directory').insertMany(json, function(err, r) {
+                console.log('Inserted ' + r.insertedCount + ' records.');
+                db.close();
+            });
+        })
+    });
+});
+
+
