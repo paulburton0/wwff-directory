@@ -16,94 +16,61 @@ block content
             thead.thead-default
                 tr
                     th Ref
-                    th Status
                     th Name
-                    th DXCC
-                    th Region
-                    th Notes
+                    th Location
+                    th Type 
                 tr
                     th
                         input(type="search" name="search-ref" id="Ref" class="search")
                     th
-                        input(type="search" name="search-status" id="Status" class="search")
-                    th
                         input(type="search" name="search-name" id="Name" class="search")
                     th
-                        input(type="search" name="search-dxcc" id="DXCC" class="search")
+                        input(type="search" name="search-location" id="Location" class="search")
                     th
-                        input(type="search" name="search-region" id="Region" class="search")
-                    th
-                        input(type="search" name="search-notes" id="Notes" class="search")
+                        input(type="search" name="search-type" id="Type" class="search")
 
             tbody(id="update")
                 - for (i=0; i<docs.length; i++) {
                     tr
-                        - if (docs[i].Status == 'deleted') {
-                            td.ref.deleted #{docs[i].Ref}
-                            td.deleted #{docs[i].Status}
-                            td.deleted #{docs[i].Name}
-                            td.deleted #{docs[i].DXCC}
-                            td.deleted #{docs[i].Region}
-                            td.deleted #{docs[i].Notes}
-                        - } else {
-                            td.ref #{docs[i].Ref}
-                            td #{docs[i].Status}
-                            td #{docs[i].Name}
-                            td #{docs[i].DXCC}
-                            td #{docs[i].Region}
-                            td #{docs[i].Notes}
-                        - }
+                        td.ref #{docs[i].Ref}
+                        td #{docs[i].Name}
+                        td #{docs[i].Location}
+                        td #{docs[i].Type}
                 - }
                 
     script.
 
         var searchFields = { Ref: '',
-                             Status: '',
                              Name: '',
-                             DXCC: '',
-                             Region: '',
-                             Notes: ''
+                             Location: '',
+                             Type: ''
                             };
 
         $('#clearSearch').click(function() { 
             $('#Ref').val('');
-            $('#Status').val('');
             $('#Name').val('');
-            $('#DXCC').val('');
-            $('#Region').val('');
-            $('#Notes').val('');
+            $('#Location').val('');
+            $('#Type').val('');
 
             var data = !{JSON.stringify(docs)};
             var output = {};
-            var deleted = '';
             var count = 0;
             var resultsCount = 0;
 
             searchFields = { Ref: '',
-                             Status: '',
                              Name: '',
-                             DXCC: '',
-                             Region: '',
-                             Notes: ''
+                             Location: '',
+                             Type: ''
                             };
 
             for (i = 0; i < data.length; i++) {
 
-                // Add the deleted CSS class if the row is marked as deleted
-                if (data[i].Status == 'deleted') {
-                    deleted = ' class="deleted"';
-                } else {
-                    deleted = '';    
-                }
                 output += '<tr>';
-                output += '<td' + deleted + ' class="ref">' + data[i].Ref + '</td>';
-                output += '<td' + deleted + '>' + data[i].Status + '</td>';
-                output += '<td' + deleted + '>' + data[i].Name + '</td>';
-                output += '<td' + deleted + '>' + data[i].DXCC + '</td>';
-                output += '<td' + deleted + '>' + data[i].Region + '</td>';
-                output += '<td' + deleted + '>' + data[i].Notes + '</td>';
+                output += '<td class="ref">' + data[i].Ref + '</td>';
+                output += '<td>' + data[i].Name + '</td>';
+                output += '<td>' + data[i].Location + '</td>';
+                output += '<td>' + data[i].Type + '</td>';
                 output += '</tr>';
-                deleted = '';
                 resultsCount++;
             }
             $('#update').html(output);
@@ -130,28 +97,17 @@ block content
 
             var output = {};
 
-            var deleted = '';
-
             // If the search string is empty, then update the content element with the full listing
-            if (!searchFields.Ref && !searchFields.Status && !searchFields.Name && !searchFields.DXCC && !searchFields.Region && !searchFields.Notes) {
+            if (!searchFields.Ref && !searchFields.Name && !searchFields.Location && !searchFields.Type) {
                 resultsCount = 0;
                 for (i = 0; i < data.length; i++) {
 
-                    // Add the deleted CSS class if the row is marked as deleted
-                    if (data[i].Status == 'deleted') {
-                        deleted = ' class="deleted"';
-                    } else {
-                        deleted = '';    
-                    }
                     output += '<tr clas="row">';
-                    output += '<td' + deleted + ' class="ref">' + data[i].Ref + '</td>';
-                    output += '<td' + deleted + '>' + data[i].Status + '</td>';
-                    output += '<td' + deleted + '>' + data[i].Name + '</td>';
-                    output += '<td' + deleted + '>' + data[i].DXCC + '</td>';
-                    output += '<td' + deleted + '>' + data[i].Region + '</td>';
-                    output += '<td' + deleted + '>' + data[i].Notes + '</td>';
+                    output += '<td>' + data[i].Ref + '</td>';
+                    output += '<td>' + data[i].Name + '</td>';
+                    output += '<td>' + data[i].Location + '</td>';
+                    output += '<td>' + data[i].Type + '</td>';
                     output += '</tr>';
-                    deleted = '';
                     resultsCount++;
                 }
                 $('#update').html(output);
@@ -166,28 +122,17 @@ block content
                    // Loop through the rows of data and search for the search string
                    if (
                        ((data[i].Ref.search(searchFields.Ref) !== -1)) && 
-                       ((data[i].Status.search(searchFields.Status) !== -1)) &&
                        ((data[i].Name.search(searchFields.Name) !== -1)) && 
-                       ((data[i].DXCC.search(searchFields.DXCC) !== -1)) && 
-                       ((data[i].Region.search(searchFields.Region) !== -1)) && 
-                       ((data[i].Notes.search(searchFields.Notes) !== -1))
+                       ((data[i].Location.search(searchFields.Location) !== -1)) && 
+                       ((data[i].Type.search(searchFields.Type) !== -1))
                       ) {
 
-                        // Add the deleted CSS class if the row is marked as deleted
-                        if (data[i].Status == 'deleted') {
-                            deleted = ' class="deleted"';
-                        } else {
-                            deleted = '';    
-                        }
                         output += '<tr>';
-                        output += '<td' + deleted + ' class="ref">' + data[i].Ref + '</td>';
-                        output += '<td' + deleted + '>' + data[i].Status + '</td>';
-                        output += '<td' + deleted + '>' + data[i].Name + '</td>';
-                        output += '<td' + deleted + '>' + data[i].DXCC + '</td>';
-                        output += '<td' + deleted + '>' + data[i].Region + '</td>';
-                        output += '<td' + deleted + '>' + data[i].Notes + '</td>';
+                        output += '<td class="ref">' + data[i].Ref + '</td>';
+                        output += '<td>' + data[i].Name + '</td>';
+                        output += '<td>' + data[i].Location + '</td>';
+                        output += '<td>' + data[i].Type + '</td>';
                         output += '</tr>';
-                        deleted = '';
 
                         resultsCount++;
                     } else {

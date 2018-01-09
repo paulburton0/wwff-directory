@@ -6,15 +6,15 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
-    "body-parser": "~1.17.1",
+    "body-parser": "~1.18.2",
     "bootstrap": "^3.3.7",
     "cookie-parser": "~1.4.3",
-    "debug": "~2.6.3",
+    "debug": "~3.1.0",
     "express": "^4.15.5",
     "jquery": "^3.2.1",
     "jquery-ui-dist": "^1.12.1",
-    "mongodb": "^2.2.31",
-    "morgan": "~1.8.1",
+    "mongodb": "^2.2.33",
+    "morgan": "~1.9.0",
     "npm": "^5.4.2",
     "pug": "~2.0.0-beta11",
     "serve-favicon": "~2.4.2"
