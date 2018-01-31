@@ -1,10 +1,6 @@
 #!/bin/bash
 appname="$(basename $0)"
-
-# UPDATE THE VALUE BELOW TO POINT TO YOUR POTA APPLICATION FOLDER. MAKE SURE THAT THE NAME OF THE APPLICATION FOLDER MATCHES THE NAME OF THIS SCRIPT. FOR EXAMPLE: `$HOME/projects/pota' IS THE APPLICATION FOLDER, THEN THIS SCRIPT MUST BE NAMED `pota'
-apppath="$HOME/projects/$appname"
-
-
+apppath="$(dirname "$(readlink -f "$0")")"
 
 if [ ! -e "$apppath/logs" ]; then
     mkdir "$apppath/logs"

@@ -30,6 +30,8 @@ to install dependencies. Once that's done, you can do:
     
 to populate the mongodb with data from the POTA website.
 
+Open the startup script (filename: pota), and update the apppath variable so that it points to the correct location.
+
 Make sure that the executable starup script has the same name as the application folder. Above, we cloned the repo into a new 'pota' folder. Make sure that the script is named the same: 'pota'.
 
 Now to start up the web server:
